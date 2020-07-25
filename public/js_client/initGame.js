@@ -2,7 +2,7 @@
 const config = {
     type : Phaser.AUTO,
     width: 800,
-    backgroundColor:"#AAAAFF",
+    backgroundColor:"#E2D7FF",
     height:600,
     scene : {
         preload : preload,
@@ -14,6 +14,12 @@ const config = {
         arcade :{
             gravity:{y:800}
         }
+    },
+    scale: {
+        parent: 'yourgamediv',
+        mode: Phaser.Scale.FIT,
+        width: 800,
+        height: 600
     }
 }
 
