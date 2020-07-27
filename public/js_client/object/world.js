@@ -17,6 +17,7 @@ let world = {
     topLayer:null,
     worldLayer:null,
     overlapLayer:null,
+    endPosition:null,
     score:0,
     textScore:null,
     gameOver:false,
@@ -31,6 +32,8 @@ let world = {
         this.overlapLayer = this.tilemap.createDynamicLayer("overlap", this.tileset,0,0);
         
         this.worldLayer.setCollisionByProperty({collide : true});
+
+        this.endPosition = this.tilemap.findObject("Objects", obj => obj.name === "end");
 
         gameObject.scene.physics.world.setBounds(0,0, this.tilemap.widthInPixels, this.tilemap.heightInPixels);
         
@@ -76,8 +79,8 @@ let world = {
         }
     },
 
-    killPlayer : function(){
-        gameObject.player.killPlayer();    
+    killPlayer : function(winOrLose){
+        gameObject.player.killPlayer(winOrLose);    
         if(!this.gameOver){
             this.gameOver = true; 
             gameObject.scene.add.sprite(gameObject.scene.cameras.main.midPoint.x, gameObject.scene.cameras.main.midPoint.y, "panel").setScale(4,2);    
@@ -98,14 +101,17 @@ let world = {
             gameObject.zombie.destroyZombie();
             gameObject.player.aPlayer.setVelocityY(-250);
         }else{
-            gameObject.world.killPlayer();
+            gameObject.world.killPlayer("lose");
         }
     },
 
 
     endLevel : function(player){
+        console.log(player.x, " s ", this.endPosition.x);
+        
+        if(player.x > this.endPosition.x + 5){
             if(!this.gameOver){
-                gameObject.world.killPlayer();
+                gameObject.world.killPlayer("win");
                 this.gameOver = true; 
                 gameObject.scene.add.sprite(gameObject.scene.cameras.main.midPoint.x, gameObject.scene.cameras.main.midPoint.y, "panel").setScale(4,2);    
                 const restartButton = gameObject.scene.add.sprite(gameObject.scene.cameras.main.midPoint.x, gameObject.scene.cameras.main.midPoint.y+65, "validation").setInteractive();
@@ -117,6 +123,7 @@ let world = {
                     gameObject.scene.scene.restart();
                     gameObject.player.isAlive = true;
                 })
-            }    
+            }  
+        }    
     }
 }

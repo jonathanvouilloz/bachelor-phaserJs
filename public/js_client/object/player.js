@@ -21,6 +21,12 @@ let player = {
             frameRate: 3,
             repeat: -1
         });
+        gameObject.scene.anims.create({
+            key: "playerWin",
+            frames: [{ key: "player", frame: "adventurer_cheer" }, { key: "player", frame: "adventurer_cheer2" }],
+            frameRate: 3,
+            repeat: -1
+        });
     },
 
 
@@ -70,8 +76,14 @@ let player = {
         }
     },
 
-    killPlayer: function () {
+    killPlayer: function (winOrLose) {
         this.isAlive = false;
-        this.aPlayer.setTexture("player", "adventurer_hurt");
+        if(winOrLose==="win"){
+            this.aPlayer.setVelocityY(-250);
+            this.aPlayer.anims.play("playerWin", true);
+        }else{
+            this.aPlayer.setTexture("player", "adventurer_hurt");
+
+        }        
     }
 }
