@@ -6,7 +6,7 @@ let player = {
     initializePlayer: function () {
         this.aPlayer = gameObject.scene.physics.add.sprite(100, 250, "player", "adventurer_stand");
         this.aPlayer.setCollideWorldBounds(true);
-        this.aPlayer.setOrigin(0.5, 1)
+        this.aPlayer.setOrigin(0.5, 1);
     },
     generatePlayerAnimations: function () {
         gameObject.scene.anims.create({

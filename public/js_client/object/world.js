@@ -17,8 +17,6 @@ let world = {
     topLayer:null,
     worldLayer:null,
     overlapLayer:null,
-    spawnPosition:null,
-    endPosition:null,
     score:0,
     textScore:null,
     gameOver:false,
@@ -44,8 +42,15 @@ let world = {
         this.overlapLayer.setTileIndexCallback(50, this.collectGem, this);
         this.overlapLayer.setTileIndexCallback(52, this.collectGem, this);
         this.overlapLayer.setTileIndexCallback(71, this.killPlayer, this);
+        this.overlapLayer.setTileIndexCallback(76, this.endLevel, this);
+        this.overlapLayer.setTileIndexCallback(90, this.endLevel, this);
         gameObject.scene.physics.add.collider(gameObject.player.aPlayer, this.worldLayer);
         gameObject.scene.physics.add.overlap(gameObject.player.aPlayer, this.overlapLayer);
+
+        gameObject.scene.physics.add.collider(gameObject.zombie.aZombie, this.worldLayer);
+        gameObject.scene.physics.add.overlap(gameObject.player.aPlayer, gameObject.zombie.aZombie, this.attackZombie);
+
+
     },
 
     manageCamera : function(){
@@ -86,5 +91,32 @@ let world = {
                 gameObject.player.isAlive = true;
             })
         }      
+    },
+
+    attackZombie : function(){
+        if(gameObject.player.isJumping){
+            gameObject.zombie.destroyZombie();
+            gameObject.player.aPlayer.setVelocityY(-250);
+        }else{
+            gameObject.world.killPlayer();
+        }
+    },
+
+
+    endLevel : function(player){
+            if(!this.gameOver){
+                gameObject.world.killPlayer();
+                this.gameOver = true; 
+                gameObject.scene.add.sprite(gameObject.scene.cameras.main.midPoint.x, gameObject.scene.cameras.main.midPoint.y, "panel").setScale(4,2);    
+                const restartButton = gameObject.scene.add.sprite(gameObject.scene.cameras.main.midPoint.x, gameObject.scene.cameras.main.midPoint.y+65, "validation").setInteractive();
+               
+                gameObject.scene.add.text(gameObject.scene.cameras.main.midPoint.x-145,gameObject.scene.cameras.main.midPoint.y-50,"Tu as gagné ! Ton score est de: "+ this.score, fontDead);
+                gameObject.scene.add.text(gameObject.scene.cameras.main.midPoint.x-115,gameObject.scene.cameras.main.midPoint.y-20,"Souhaites-tu recommencer ?", fontDead);
+    
+                restartButton.on("pointerup", function(){
+                    gameObject.scene.scene.restart();
+                    gameObject.player.isAlive = true;
+                })
+            }    
     }
 }
